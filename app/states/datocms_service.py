@@ -8,9 +8,34 @@ import logging
 async def fetch_datocms_data() -> dict[str, list]:
     """Fetches skills and projects from DatoCMS."""
     api_token = os.getenv("DATOCMS_API_TOKEN")
+    # If the token isn't in the environment, try to read a `.env` file in the
+    # repository root. Many local dev setups keep secrets in a .env file but do
+    # not export them into the process environment; this makes the function
+    # more robust during local development.
     if not api_token:
-        logging.error("DATOCMS_API_TOKEN is not set.")
-        raise ValueError("DATOCMS_API_TOKEN environment variable not set.")
+        try:
+            from pathlib import Path
+
+            env_path = Path.cwd() / ".env"
+            if env_path.exists():
+                for line in env_path.read_text().splitlines():
+                    # Very small parser for KEY=VALUE lines; ignore comments and empty lines
+                    line = line.strip()
+                    if not line or line.startswith("#") or "=" not in line:
+                        continue
+                    k, v = line.split("=", 1)
+                    if k.strip() == "DATOCMS_API_TOKEN":
+                        api_token = v.strip()
+                        break
+        except Exception:
+            logging.exception("Failed to read .env file to obtain DATOCMS_API_TOKEN")
+
+    if not api_token:
+        # Don't raise here — returning empty data allows the app to function
+        # offline or without CMS configured. The caller will set an error
+        # message in state if needed.
+        logging.warning("DATOCMS_API_TOKEN not found in environment or .env — skipping CMS sync.")
+        return {"skills": [], "projects": []}
     transport = AIOHTTPTransport(
         url="https://graphql.datocms.com/",
         headers={"Authorization": f"Bearer {api_token}"},

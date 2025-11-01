@@ -4,3 +4,4 @@ google-generativeai
 gql
 requests
 requests-toolbelt
+python-dotenv

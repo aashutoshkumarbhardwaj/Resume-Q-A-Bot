@@ -1,4 +1,16 @@
 import reflex as rx
+
+# Load environment variables from .env early so background workers and all
+# processes have access to keys like DATOCMS_API_TOKEN during local dev.
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv()
+except Exception:
+    # If python-dotenv is not installed, proceed without failing — fetch_datocms_data
+    # has fallback behavior for missing tokens.
+    pass
+
 from app.state import ChatState, message_bubble
 from app.settings import settings_page
 from app.states.resume_state import ResumeState

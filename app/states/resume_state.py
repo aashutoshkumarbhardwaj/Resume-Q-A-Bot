@@ -100,9 +100,24 @@ class ResumeState(rx.State):
         async with self:
             is_synced = self.last_sync_time is not None
         if not is_synced:
-            yield (await self._sync_data())
+            # Await and return the sync result instead of yielding a coroutine result.
+            # Reflex expects an awaited return for background events.
+            return await self._sync_data()
 
     @rx.event
-    def manual_sync_cms_data(self):
-        """Allows the user to manually trigger a data sync from DatoCMS."""
-        return self._sync_data
+    @rx.event(background=True)
+    async def manual_sync_cms_data(self):
+        """Allows the user to manually trigger a data sync from DatoCMS.
+
+        Run as a background event and await the actual sync coroutine. This
+        ensures we run the same workflow as the automatic loader and return
+        the toast/result to the client.
+        """
+        try:
+            return await self._sync_data()
+        except Exception as e:
+            # _sync_data already logs exceptions, but ensure the manual event
+            # doesn't raise unhandled exceptions to the framework.
+            logging.exception(f"manual_sync_cms_data failed: {e}")
+            self.sync_error = f"Manual sync failed: {e}"
+            return rx.toast.error(str(e))

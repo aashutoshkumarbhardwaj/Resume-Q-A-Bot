@@ -1,4 +1,10 @@
-.web/
-.states/
+# Environment variables
+.env
+
+# Python
 __pycache__/
-/app/__pycache__/
+.venv/
+
+# Reflex
+.web/
+web/
