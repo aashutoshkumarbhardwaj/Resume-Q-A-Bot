@@ -1,0 +1,6 @@
+
+reflex==0.8.17
+google-generativeai
+gql
+requests
+requests-toolbelt
