@@ -36,6 +36,7 @@ A personal assistant that knows everything about me, my experience, and my proje
 🌍 Hosted on Vercel
 
 🧱 Folder Structure
+
 portfolio-chatbot/
 │── app/                 # Reflex app directory
 │   ├── components/      # Reusable UI components
