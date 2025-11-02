@@ -50,7 +50,8 @@ portfolio-chatbot/
 🎬 Demo
 <p align="center"> <img src="https://media.giphy.com/media/l0MYC0LajbaPoEADu/giphy.gif" width="600" alt="Demo Animation" /> <br/> <em>✨ Chat with my portfolio — coming alive soon 🧠</em> </p>
 
-🎥 Video Demo: rsumechat.mp4
+🎥 Video Demo: [rsumechat.mp4](https://github.com/Aashutoshkumarbhardwaj/Resume-Q-A-Bot/raw/main/rsumechat.mp4
+)
 
 ⚙️ Installation
 # Clone the repo
